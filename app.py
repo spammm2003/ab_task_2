@@ -6,16 +6,20 @@ st.set_page_config(page_title='Дашборд Університету', page_ic
 
 st.title('🎓 Дашборд успішності студентів')
 
-# --- 1. Завантаження даних ---
+# --- 1. Завантаження даних через RAW-посилання ---
 @st.cache_data
 def load_data():
-    # Читаємо CSV файл (переконайтеся, що він у тій самій папці)
-    return pd.read_csv('students_data.csv')
+    # ТУТ ВСТАВТЕ ВАШЕ RAW-ПОСИЛАННЯ З GITHUB
+    csv_url = "https://raw.githubusercontent.com/ВАШ_ЮЗЕРНЕЙМ/ВАШ_РЕПОЗИТОРІЙ/main/students_data.csv"
+    
+    # Pandas автоматично завантажує та читає CSV за прямим посиланням
+    return pd.read_csv(csv_url)
 
 try:
-    df = load_data()
-except FileNotFoundError:
-    st.error("Файл 'students_data.csv' не знайдено. Будь ласка, створіть його за зразком.")
+    with st.spinner('Завантаження даних з репозиторію...'):
+        df = load_data()
+except Exception as e:
+    st.error(f"🚨 Помилка завантаження даних. Перевірте правильність RAW-посилання.\n\n**Деталі помилки:** {e}")
     st.stop()
 
 # --- 2. Бічна панель з фільтрами ---
@@ -70,14 +74,13 @@ st.divider()
 st.subheader('🔗 Аналіз кореляцій між предметами')
 st.write("Кореляційна матриця показує, як оцінки з одного предмета пов'язані з оцінками з іншого. Значення від -1 до 1.")
 
-# Щоб порахувати кореляцію між предметами, нам потрібно перетворити (pivot) таблицю:
 # Рядки - це студенти (і семестри), колонки - предмети, значення - оцінки
 pivot_df = df.pivot_table(index=['Студент', 'Семестр'], columns='Предмет', values='Оцінка')
 
-# Рахуємо матрицю кореляцій (метод Пірсона за замовчуванням)
+# Рахуємо матрицю кореляцій
 corr_matrix = pivot_df.corr()
 
-# Відображаємо матрицю з кольоровим градієнтом для наочності
+# Відображаємо матрицю з кольоровим градієнтом
 st.dataframe(
     corr_matrix.style.background_gradient(cmap='coolwarm', axis=None).format("{:.2f}"),
     use_container_width=True

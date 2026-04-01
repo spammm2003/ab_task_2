@@ -10,7 +10,7 @@ st.title('🎓 Дашборд успішності студентів')
 @st.cache_data
 def load_data():
     # ТУТ ВСТАВТЕ ВАШЕ RAW-ПОСИЛАННЯ З GITHUB
-    csv_url = "https://raw.githubusercontent.com/ВАШ_ЮЗЕРНЕЙМ/ВАШ_РЕПОЗИТОРІЙ/main/students_data.csv"
+    csv_url = "https://raw.githubusercontent.com/spammm2003/ab_task_2/refs/heads/main/students_data.csv"
     
     # Pandas автоматично завантажує та читає CSV за прямим посиланням
     return pd.read_csv(csv_url)
